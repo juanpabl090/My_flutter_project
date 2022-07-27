@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:project_1/pages/chat_message.dart';
+
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
 
@@ -14,6 +16,17 @@ class _ChatPageState extends State<ChatPage> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _estaEscribiendo = false;
+
+  final List<ChatMessage> _mesagges = [
+    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
+    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,8 @@ class _ChatPageState extends State<ChatPage> {
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 reverse: true,
-                itemBuilder: (_, i) => Text('$i'),
+                itemCount: _mesagges.length,
+                itemBuilder: (_, i) => _mesagges[i],
               ),
             ),
             const Divider(height: 1),
@@ -114,6 +128,13 @@ class _ChatPageState extends State<ChatPage> {
     print(texto);
     _focusNode.requestFocus();
     _textController.clear();
+
+    //* INSTANCIA DEL NUEVO MENSAJE
+    final newMessage = ChatMessage(texto: texto, uid: '12311');
+
+    //* INSERTA EL NUEVO MENSAJE AL ARREGLO
+    _mesagges.insert(0, newMessage);
+
     setState(() {
       _estaEscribiendo = false;
     });
