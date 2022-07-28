@@ -12,21 +12,12 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _estaEscribiendo = false;
 
-  final List<ChatMessage> _mesagges = [
-    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '123'),
-    const ChatMessage(texto: 'Hola Mundo', uid: '122223'),
-  ];
+  final List<ChatMessage> _mesagges = [];
 
   @override
   Widget build(BuildContext context) {
@@ -125,18 +116,35 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   _handleSubmit(String texto) {
-    print(texto);
+    if (texto.isEmpty) return;
     _focusNode.requestFocus();
     _textController.clear();
 
     //* INSTANCIA DEL NUEVO MENSAJE
-    final newMessage = ChatMessage(texto: texto, uid: '12311');
+    final newMessage = ChatMessage(
+      texto: texto,
+      uid: '123',
+      animationController: AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 200)),
+    );
 
     //* INSERTA EL NUEVO MENSAJE AL ARREGLO
     _mesagges.insert(0, newMessage);
+    newMessage.animationController.forward();
 
     setState(() {
       _estaEscribiendo = false;
     });
+
+    @override
+    dispose() {
+      // TODO: OFF DEL SOCKET
+
+      for(ChatMessage message in _mesagges){
+        message.animationController.dispose();
+      }
+
+      super.dispose();
+    }
   }
 }
