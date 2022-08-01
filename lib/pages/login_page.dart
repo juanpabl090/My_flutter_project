@@ -1,11 +1,12 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
-import 'package:project_1/widgets/custom_labels.dart';
-import 'package:project_1/widgets/custom_input.dart';
+import 'package:project_1/services/auth_services.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/custom_btn.dart';
 import '../widgets/custom_logo.dart';
+import 'package:project_1/helpers/mostrar_alerta.dart';
+import 'package:project_1/widgets/custom_input.dart';
+import 'package:project_1/widgets/custom_labels.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class LoginPage extends StatelessWidget {
                 Labels(
                   ruta: 'register',
                   titulo: '¿No tienes cuenta?',
-                  subTitulo: 'Crea una ahora!', 
+                  subTitulo: 'Crea una ahora!',
                 ),
                 Text('Terminos y condiciones de uso',
                     style: TextStyle(fontWeight: FontWeight.w200)),
@@ -55,6 +56,8 @@ class _FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -74,10 +77,20 @@ class _FormState extends State<_Form> {
           ),
           BtnCustom(
             printText: 'Iniciar Sesión',
-            onPressed: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-            },
+            onPressed: authService.autenticando
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+
+                    if (loginOk) {
+                      //TODO: NAVEGAR A OTRA PANTALLA
+                    } else {
+                      mostrarAlerta(context, 'Inicio de sesión incorrecto', 'Revise sus credenciales nuevamente');
+                    }
+                  },
           ),
         ],
       ),
