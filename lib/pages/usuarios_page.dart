@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_1/Models/usuario.dart';
+import 'package:provider/provider.dart';
+
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'package:project_1/Models/usuario.dart';
+import 'package:project_1/services/auth_services.dart';
 
 class UsuariosPage extends StatefulWidget {
   const UsuariosPage({Key? key}) : super(key: key);
@@ -23,20 +27,28 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('Mi Nombre')),
+          title: Center(child: Text(usuario.nombre)),
           elevation: 0,
           leading: IconButton(
-            onPressed: () {},
             icon: const Icon(Icons.exit_to_app),
+            onPressed: () {
+              //TODO: DESCONECTAR EL SOCKET
+              AuthService.deleteToken();
+              Navigator.pushReplacementNamed(context, 'login');
+            },
           ),
           actions: <Widget>[
             Container(
               margin: const EdgeInsets.only(right: 10),
               child: const Icon(Icons.check_circle, color: Colors.greenAccent),
               // child: const Icon(Icons.offline_bolt, color: Colors.redAccent),
-            )
+            ),
           ],
         ),
         body: SmartRefresher(

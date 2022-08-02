@@ -1,5 +1,8 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
+import 'package:project_1/helpers/mostrar_alerta.dart';
+import 'package:provider/provider.dart';
+import 'package:project_1/services/auth_services.dart';
 
 import 'package:project_1/widgets/custom_input.dart';
 import 'package:project_1/widgets/custom_labels.dart';
@@ -28,7 +31,7 @@ class RegisterPage extends StatelessWidget {
                 Labels(
                   ruta: 'login',
                   titulo: 'Ya tienes una cuenta?',
-                  subTitulo: 'Iniciar Sesión', 
+                  subTitulo: 'Iniciar Sesión',
                 ),
                 Text('Terminos y condiciones de uso',
                     style: TextStyle(fontWeight: FontWeight.w200)),
@@ -55,6 +58,8 @@ class _FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -79,11 +84,26 @@ class _FormState extends State<_Form> {
             isPassword: true,
           ),
           BtnCustom(
-            printText: 'Guardar',
-            onPressed: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-            },
+            printText: 'Crear Cuenta',
+            onPressed: authService.autenticando
+                ? null
+                : () async {
+                    print(nameCtrl.text);
+                    print(emailCtrl.text);
+                    print(passCtrl.text);
+
+                    final registroOk = await authService.register(
+                        nameCtrl.text.trim(),
+                        emailCtrl.text.trim(),
+                        passCtrl.text.trim());
+                    if (registroOk == true) {
+                      if (!mounted) return;
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      if (!mounted) return;
+                      mostrarAlerta(context, 'Registro Incorrecto', registroOk);
+                    }
+                  },
           ),
         ],
       ),

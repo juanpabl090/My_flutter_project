@@ -86,8 +86,12 @@ class _FormState extends State<_Form> {
                         emailCtrl.text.trim(), passCtrl.text.trim());
 
                     if (loginOk) {
-                      //TODO: NAVEGAR A OTRA PANTALLA
+                      //TODO: CONECTAR A NUESTRO SOCKET SERVER:
+                       if (!mounted) return;
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                      //TODO: NAVEGAR A OTRA PANTALLA:
                     } else {
+                      if (!mounted) return;
                       mostrarAlerta(context, 'Inicio de sesión incorrecto', 'Revise sus credenciales nuevamente');
                     }
                   },
