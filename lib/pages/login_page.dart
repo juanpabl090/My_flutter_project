@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_1/services/auth_services.dart';
+import 'package:project_1/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/custom_btn.dart';
@@ -57,6 +58,7 @@ class _FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: const EdgeInsets.only(top: 40),
@@ -86,13 +88,14 @@ class _FormState extends State<_Form> {
                         emailCtrl.text.trim(), passCtrl.text.trim());
 
                     if (loginOk) {
-                      //TODO: CONECTAR A NUESTRO SOCKET SERVER:
-                       if (!mounted) return;
+                      socketService.connect();
+                      if (!mounted) return;
                       Navigator.pushReplacementNamed(context, 'usuarios');
                       //TODO: NAVEGAR A OTRA PANTALLA:
                     } else {
                       if (!mounted) return;
-                      mostrarAlerta(context, 'Inicio de sesión incorrecto', 'Revise sus credenciales nuevamente');
+                      mostrarAlerta(context, 'Inicio de sesión incorrecto',
+                          'Revise sus credenciales nuevamente');
                     }
                   },
           ),

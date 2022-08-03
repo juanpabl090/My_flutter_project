@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_1/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -27,8 +28,10 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final authService = Provider.of<AuthService>(context);
+
+    final socketService = Provider.of<SocketService>(context);
+
     final usuario = authService.usuario;
 
     return Scaffold(
@@ -38,7 +41,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
           leading: IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () {
-              //TODO: DESCONECTAR EL SOCKET
+              socketService.disconnect();
               AuthService.deleteToken();
               Navigator.pushReplacementNamed(context, 'login');
             },
@@ -46,8 +49,9 @@ class _UsuariosPageState extends State<UsuariosPage> {
           actions: <Widget>[
             Container(
               margin: const EdgeInsets.only(right: 10),
-              child: const Icon(Icons.check_circle, color: Colors.greenAccent),
-              // child: const Icon(Icons.offline_bolt, color: Colors.redAccent),
+              child: (socketService.serverStatus == ServerStatus.Online)
+                  ? const Icon(Icons.check_circle, color: Colors.greenAccent)
+                  : const Icon(Icons.offline_bolt, color: Colors.red),
             ),
           ],
         ),
