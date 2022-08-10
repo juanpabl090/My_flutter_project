@@ -97,10 +97,8 @@ class _FormState extends State<_Form> {
                         emailCtrl.text.trim(),
                         passCtrl.text.trim());
                     if (registroOk == true) {
-                      if (!mounted) return;
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
-                      if (!mounted) return;
                       mostrarAlerta(context, 'Registro Incorrecto', registroOk);
                     }
                   },

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_1/services/socket_service.dart';
 import 'package:provider/provider.dart';
-
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'package:project_1/services/socket_service.dart';
+import 'package:project_1/services/usuarios_service.dart';
 import 'package:project_1/Models/usuario.dart';
 import 'package:project_1/services/auth_services.dart';
 
@@ -15,8 +15,11 @@ class UsuariosPage extends StatefulWidget {
 }
 
 class _UsuariosPageState extends State<UsuariosPage> {
+  final usuarioService = UsuariosService();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+
+  // List<Usuario> usuarios = [];
 
   final usuarios = [
     Usuario(uid: '1', nombre: 'Maria', email: 'test1@test.com', online: true),
@@ -50,8 +53,8 @@ class _UsuariosPageState extends State<UsuariosPage> {
             Container(
               margin: const EdgeInsets.only(right: 10),
               child: (socketService.serverStatus == ServerStatus.Online)
-                  ? const Icon(Icons.check_circle, color: Colors.greenAccent)
-                  : const Icon(Icons.offline_bolt, color: Colors.red),
+                      ? const Icon(Icons.check_circle, color: Colors.greenAccent)
+                      : const Icon(Icons.check_circle, color: Colors.red),
             ),
           ],
         ),
@@ -92,7 +95,10 @@ class _UsuariosPageState extends State<UsuariosPage> {
   }
 
   _cargarUsuarios() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
+
+    // usuarios = await usuarioService.getUsuarios();
+
+    // await Future.delayed(const Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }

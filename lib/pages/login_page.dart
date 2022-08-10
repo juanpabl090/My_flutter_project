@@ -89,11 +89,8 @@ class _FormState extends State<_Form> {
 
                     if (loginOk) {
                       socketService.connect();
-                      if (!mounted) return;
                       Navigator.pushReplacementNamed(context, 'usuarios');
-                      //TODO: NAVEGAR A OTRA PANTALLA:
                     } else {
-                      if (!mounted) return;
                       mostrarAlerta(context, 'Inicio de sesión incorrecto',
                           'Revise sus credenciales nuevamente');
                     }
